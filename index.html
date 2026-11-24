@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Punto de Venta - BY ARI</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 14px;
+      background: #f3f4f6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: #111827;
+    }
+    .app-card {
+      width: 100%;
+      max-width: 580px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e5e7eb;
+    }
+    .top-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #f1f5f9;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-app {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+    .brand-title {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+      color: #111827;
+      line-height: 1.15;
+    }
+    .brand-sub {
+      margin: 3px 0 0 0;
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .header-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .btn-ghost {
+      background: #f3f4f6;
+      color: #111827;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-csv {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .panel-box {
+      display: none;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    .panel-box.activo {
+      display: block;
+    }
+    .panel-box h3 {
+      margin: 0 0 10px 0;
+      font-size: 15px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .form-grid .full {
+      grid-column: 1 / -1;
+    }
+    .panel-box input, .panel-box select {
+      width: 100%;
+      height: 40px;
+      padding: 0 10px;
+      font-size: 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+    .btn-save-prod {
+      width: 100%;
+      height: 42px;
+      background: #1d4ed8;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    .csv-tools {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .lista-prod {
+      max-height: 175px;
+      overflow-y: auto;
+      font-size: 13px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px;
+    }
+    .prod-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 4px;
+      border-bottom: 1px solid #f1f5f9;
+      gap: 8px;
+    }
+    .prod-item:last-child {
+      border-bottom: none;
+    }
+    .btn-mini-del {
+      background: #fee2e2;
+      color: #991b1b;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .corte-resumen {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .corte-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .corte-label {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .corte-val {
+      font-size: 18px;
+      font-weight: 800;
+      color: #111827;
+      margin-top: 2px;
+    }
+    .search-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    input.buscador {
+      flex: 1;
+      min-width: 0;
+      height: 48px;
+      padding: 0 14px;
+      font-size: 16px;
+      color: #111827;
+      background: #f9fafb;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      outline: none;
+    }
+    input.buscador:focus {
+      background: #ffffff;
+      border-color: #111827;
+    }
+    .btn-search {
+      height: 48px;
+      padding: 0 16px;
+      background: #111827;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .cart-box {
+      background: #fafafa;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 8px 10px;
+      margin-bottom: 14px;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      padding: 8px 4px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+    td {
+      padding: 10px 4px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #111827;
+      vertical-align: middle;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    .qty-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-qty {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-rm {
+      background: #fee2e2;
+      color: #991b1b;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 7px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .num {
+      text-align: right;
+      white-space: nowrap;
+    }
+    .center {
+      text-align: center;
+      white-space: nowrap;
+    }
+    .pago-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+    .pago-fila {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .pago-fila:last-child {
+      margin-bottom: 0;
+    }
+    .pago-fila label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+    }
+    .pago-fila select, .pago-fila input {
+      height: 38px;
+      padding: 0 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #ffffff;
+      font-size: 14px;
+    }
+    .cambio-txt {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f766e;
+    }
+    .total-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+    .total-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #475569;
+    }
+    .total-amount {
+      font-size: 24px;
+      font-weight: 800;
+      color: #111827;
+    }
+    .btn-pay {
+      width: 100%;
+      height: 52px;
+      background: #16a34a;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.22);
+    }
+    .btn-pay:disabled {
+      background: #cbd5e1;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    #ticket { display: none; }
+    .ticket-logo { display: block; width: 85px; height: 85px; margin: 0 auto 4px auto; }
+    @media print {
+      body * { visibility: hidden; }
+      #ticket, #ticket * { visibility: visible; }
+      #ticket {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 80mm;
+        font-family: monospace;
+        font-size: 12px;
+      }
+      @page { margin: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-card">
+  <div class="top-header">
+    <div class="brand-box">
+      <svg class="logo-app" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-label="By Ari Ropa">
+        <rect width="120" height="120" rx="22" fill="#ffffff" stroke="#e5e7eb" stroke-width="2"/>
+        <path d="M64 12 L66 20 L74 22 L66 24 L64 32 L62 24 L54 22 L62 20 Z" fill="#c80000"/>
+        <path d="M20 48 L21.5 54 L27.5 55.5 L21.5 57 L20 63 L18.5 57 L12.5 55.5 L18.5 54 Z" fill="#c80000"/>
+        <path d="M100 52 L101.5 58 L107.5 59.5 L101.5 61 L100 67 L98.5 61 L92.5 59.5 L98.5 58 Z" fill="#c80000"/>
+        <text x="60" y="52" text-anchor="middle" font-family="Georgia, serif" font-weight="900" font-size="30" fill="#c80000">By</text>
+        <text x="60" y="79" text-anchor="middle" font-family="Georgia, serif" font-weight="900" font-size="30" fill="#c80000">Ari</text>
+        <text x="60" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" letter-spacing="2" fill="#374151">Ropa</text>
+      </svg>
+      <div>
+        <h2 class="brand-title">BY ARI</h2>
+        <p id="estado" class="brand-sub">Cargando...</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn-ghost" onclick="togglePanel('panel-inventario')">📦 Productos</button>
+      <button type="button" class="btn-ghost" onclick="togglePanel('panel-corte')">📊 Corte</button>
+      <button type="button" class="btn-csv" onclick="exportarVentasCSV()">⬇ Ventas CSV</button>
+    </div>
+  </div>
+
+  <!-- Panel Productos -->
+  <div id="panel-inventario" class="panel-box">
+    <h3>Agregar / Actualizar Producto</h3>
+    <div class="form-grid">
+      <input type="text" id="prod-codigo" placeholder="Código (ej. 101)">
+      <input type="number" id="prod-precio" placeholder="Precio (ej. 199)" step="0.01" min="0">
+      <input type="text" id="prod-nombre" class="full" placeholder="Nombre del producto (ej. Blusa roja)">
+      <input type="number" id="prod-stock" class="full" placeholder="Stock inicial (ej. 10)" step="1" min="0">
+    </div>
+    <button type="button" class="btn-save-prod" onclick="guardarProducto()">Guardar Producto</button>
+
+    <div class="csv-tools">
+      <button type="button" class="btn-csv" onclick="exportarInventarioCSV()">⬇ Respaldar Inventario CSV</button>
+      <button type="button" class="btn-ghost" onclick="document.getElementById('input-csv-inv').click()">⬆ Importar Inventario CSV</button>
+      <input type="file" id="input-csv-inv" accept=".csv" style="display:none;" onchange="importarInventarioCSV(event)">
+    </div>
+
+    <div id="lista-productos" class="lista-prod"></div>
+  </div>
+
+  <!-- Panel Corte de Caja -->
+  <div id="panel-corte" class="panel-box">
+    <h3>Corte de Caja</h3>
+    <div class="corte-resumen">
+      <div class="corte-card">
+        <div class="corte-label">Ventas registradas</div>
+        <div id="corte-num-ventas" class="corte-val">0</div>
+      </div>
+      <div class="corte-card">
+        <div class="corte-label">Total acumulado</div>
+        <div id="corte-total-ventas" class="corte-val">$0.00</div>
+      </div>
+    </div>
+    <div id="lista-corte" class="lista-prod"></div>
+  </div>
+
+  <div class="search-group">
+    <input type="text" id="lector" class="buscador" placeholder="Código o nombre del producto..." autofocus>
+    <button type="button" class="btn-search" onclick="ejecutarBusqueda()">Buscar</button>
+  </div>
+
+  <div class="cart-box">
+    <table>
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th class="center">Cant.</th>
+          <th class="num">Precio</th>
+          <th class="num">Subtotal</th>
+          <th class="center"></th>
+        </tr>
+      </thead>
+      <tbody id="tabla-carrito"></tbody>
+    </table>
+  </div>
+
+  <div class="pago-box">
+    <div class="pago-fila">
+      <label for="metodo-pago">Método de pago:</label>
+      <select id="metodo-pago" onchange="calcularCambio()">
+        <option value="Efectivo">Efectivo</option>
+        <option value="Transferencia">Transferencia</option>
+        <option value="Tarjeta">Tarjeta</option>
+      </select>
+    </div>
+    <div class="pago-fila" id="fila-efectivo">
+      <label for="monto-recibido">Recibido ($):</label>
+      <input type="number" id="monto-recibido" placeholder="0.00" step="0.01" min="0" oninput="calcularCambio()">
+      <span id="texto-cambio" class="cambio-txt">Cambio: $0.00</span>
+    </div>
+  </div>
+
+  <div class="total-bar">
+    <span class="total-label">Total a cobrar</span>
+    <span class="total-amount">$<span id="total">0.00</span></span>
+  </div>
+
+  <button id="btn-cobrar" class="btn-pay" onclick="cobrar()">Cobrar e Imprimir Ticket</button>
+</div>
+
+<div id="ticket">
+  <svg class="ticket-logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <path d="M64 12 L66 20 L74 22 L66 24 L64 32 L62 24 L54 22 L62 20 Z" fill="#000000"/>
+    <path d="M20 48 L21.5 54 L27.5 55.5 L21.5 57 L20 63 L18.5 57 L12.5 55.5 L18.5 54 Z" fill="#000000"/>
+    <path d="M100 52 L101.5 58 L107.5 59.5 L101.5 61 L100 67 L98.5 61 L92.5 59.5 L98.5 58 Z" fill="#000000"/>
+    <text x="60" y="52" text-anchor="middle" font-family="Georgia, serif" font-weight="900" font-size="30" fill="#000000">By</text>
+    <text x="60" y="79" text-anchor="middle" font-family="Georgia, serif" font-weight="900" font-size="30" fill="#000000">Ari</text>
+    <text x="60" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" letter-spacing="2" fill="#000000">Ropa</text>
+  </svg>
+  <p id="ticket-folio" style="text-align:center; margin:5px 0;"></p>
+  <p id="ticket-pago" style="text-align:center; margin:4px 0;"></p>
+  <hr>
+  <div id="ticket-items"></div>
+  <hr>
+  <p id="ticket-total" style="text-align:right; font-weight:bold;"></p>
+  <p style="text-align:center;">¡Gracias por su compra!</p>
+</div>
+
+<script>
+  const KEY_PROD = 'byari_pos_productos_v1';
+  const KEY_VENTAS = 'byari_pos_ventas_v1';
+
+  let inventario = [];
+  let ventas = [];
+  let carrito = [];
+
+  window.onload = function() {
+    cargarDatosLocales();
+  };
+
+  function cargarDatosLocales() {
+    const rawProd = localStorage.getItem(KEY_PROD);
+    const rawVentas = localStorage.getItem(KEY_VENTAS);
+
+    inventario = rawProd ? JSON.parse(rawProd) : [];
+    ventas = rawVentas ? JSON.parse(rawVentas) : [];
+
+    actualizarEstado();
+    renderizarListaInventario();
+    renderizarCorte();
+  }
+
+  function guardarInventarioLocal() {
+    localStorage.setItem(KEY_PROD, JSON.stringify(inventario));
+    actualizarEstado();
+    renderizarListaInventario();
+  }
+
+  function actualizarEstado() {
+    document.getElementById('estado').innerText =
+      `Productos: ${inventario.length} | Ventas: ${ventas.length}`;
+  }
+
+  function togglePanel(idPanel) {
+    const target = document.getElementById(idPanel);
+    const yaActivo = target.classList.contains('activo');
+    document.querySelectorAll('.panel-box').forEach(el => el.classList.remove('activo'));
+    if (!yaActivo) {
+      target.classList.add('activo');
+      if (idPanel === 'panel-inventario') renderizarListaInventario();
+      if (idPanel === 'panel-corte') renderizarCorte();
+    }
+  }
+
+  function guardarProducto() {
+    const codigo = document.getElementById('prod-codigo').value.trim();
+    const nombre = document.getElementById('prod-nombre').value.trim();
+    const precio = Number(document.getElementById('prod-precio').value);
+    const stock = Number(document.getElementById('prod-stock').value);
+
+    if (!codigo || !nombre || isNaN(precio) || precio < 0) {
+      alert('Completa código, nombre y precio válido.');
+      return;
+    }
+
+    const idx = inventario.findIndex(p => String(p.codigo).toLowerCase() === codigo.toLowerCase());
+    const nuevoProd = {
+      codigo: codigo,
+      nombre: nombre,
+      precio: precio,
+      stock: isNaN(stock) ? 0 : stock
+    };
+
+    if (idx >= 0) {
+      inventario[idx] = nuevoProd;
+    } else {
+      inventario.push(nuevoProd);
+    }
+
+    guardarInventarioLocal();
+
+    document.getElementById('prod-codigo').value = '';
+    document.getElementById('prod-nombre').value = '';
+    document.getElementById('prod-precio').value = '';
+    document.getElementById('prod-stock').value = '';
+    alert('Producto guardado.');
+  }
+
+  function eliminarProducto(codigo) {
+    inventario = inventario.filter(p => p.codigo !== codigo);
+    guardarInventarioLocal();
+  }
+
+  function renderizarListaInventario() {
+    const cont = document.getElementById('lista-productos');
+    if (inventario.length === 0) {
+      cont.innerHTML = '<div style="color:#6b7280; padding:6px;">Sin productos aún. Agrega uno arriba.</div>';
+      return;
+    }
+    cont.innerHTML = inventario.map(p => `
+      <div class="prod-item">
+        <div>
+          <strong>${p.nombre}</strong> (${p.codigo})<br>
+          <span style="color:#4b5563;">$${Number(p.precio).toFixed(2)} · Stock: ${p.stock}</span>
+        </div>
+        <button type="button" class="btn-mini-del" onclick="eliminarProducto('${String(p.codigo).replace(/'/g, "\\'")}')">Borrar</button>
+      </div>
+    `).join('');
+  }
+
+  function renderizarCorte() {
+    const numEl = document.getElementById('corte-num-ventas');
+    const totEl = document.getElementById('corte-total-ventas');
+    const listEl = document.getElementById('lista-corte');
+
+    const suma = ventas.reduce((acc, v) => acc + Number(v.total || 0), 0);
+    numEl.innerText = ventas.length;
+    totEl.innerText = '$' + suma.toFixed(2);
+
+    if (ventas.length === 0) {
+      listEl.innerHTML = '<div style="color:#6b7280; padding:6px;">Aún no hay ventas hoy.</div>';
+      return;
+    }
+
+    listEl.innerHTML = [...ventas].reverse().slice(0, 20).map(v => `
+      <div class="prod-item">
+        <div>
+          <strong>${v.folio}</strong> · ${v.metodo || 'Efectivo'}<br>
+          <span style="color:#4b5563;">${v.productos}</span>
+        </div>
+        <strong>$${Number(v.total).toFixed(2)}</strong>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('lector').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      ejecutarBusqueda();
+    }
+  });
+
+  function ejecutarBusqueda() {
+    const input = document.getElementById('lector');
+    const texto = input.value.trim();
+    if (!texto) return;
+    input.value = '';
+    buscarYAgregar(texto);
+    input.focus();
+  }
+
+  function buscarYAgregar(consulta) {
+    const q = String(consulta).trim().toLowerCase();
+    let prod = inventario.find(p => String(p.codigo).trim().toLowerCase() === q);
+    if (!prod) {
+      prod = inventario.find(p => String(p.nombre).toLowerCase().includes(q));
+    }
+
+    if (!prod) {
+      alert('Producto no encontrado: ' + consulta);
+      return;
+    }
+
+    const enCarrito = carrito.find(c => c.codigo === prod.codigo);
+    if (enCarrito) {
+      enCarrito.cantidad++;
+    } else {
+      carrito.push({ ...prod, cantidad: 1 });
+    }
+    renderizarCarrito();
+  }
+
+  function cambiarCantidad(codigo, delta) {
+    const idx = carrito.findIndex(c => c.codigo === codigo);
+    if (idx === -1) return;
+    carrito[idx].cantidad += delta;
+    if (carrito[idx].cantidad <= 0) {
+      carrito.splice(idx, 1);
+    }
+    renderizarCarrito();
+  }
+
+  function quitarItem(codigo) {
+    carrito = carrito.filter(c => c.codigo !== codigo);
+    renderizarCarrito();
+  }
+
+  function renderizarCarrito() {
+    const tbody = document.getElementById('tabla-carrito');
+    tbody.innerHTML = '';
+    let total = 0;
+
+    carrito.forEach(item => {
+      const sub = item.precio * item.cantidad;
+      total += sub;
+      const safeCode = String(item.codigo).replace(/'/g, "\\'");
+      tbody.innerHTML += `<tr>
+        <td>${item.nombre}</td>
+        <td class="center">
+          <div class="qty-controls">
+            <button type="button" class="btn-qty" onclick="cambiarCantidad('${safeCode}', -1)">−</button>
+            <span>${item.cantidad}</span>
+            <button type="button" class="btn-qty" onclick="cambiarCantidad('${safeCode}', 1)">+</button>
+          </div>
+        </td>
+        <td class="num">$${item.precio.toFixed(2)}</td>
+        <td class="num">$${sub.toFixed(2)}</td>
+        <td class="center"><button type="button" class="btn-rm" onclick="quitarItem('${safeCode}')">✕</button></td>
+      </tr>`;
+    });
+    document.getElementById('total').innerText = total.toFixed(2);
+    calcularCambio();
+  }
+
+  function calcularCambio() {
+    const metodo = document.getElementById('metodo-pago').value;
+    const filaEf = document.getElementById('fila-efectivo');
+    const total = Number(document.getElementById('total').innerText) || 0;
+    const recibido = Number(document.getElementById('monto-recibido').value) || 0;
+    const cambioEl = document.getElementById('texto-cambio');
+
+    if (metodo !== 'Efectivo') {
+      filaEf.style.display = 'none';
+      cambioEl.innerText = 'Cambio: $0.00';
+      return;
+    }
+    filaEf.style.display = 'flex';
+    const cambio = Math.max(0, recibido - total);
+    cambioEl.innerText = 'Cambio: $' + cambio.toFixed(2);
+  }
+
+  function cobrar() {
+    if (carrito.length === 0) return;
+    const btn = document.getElementById('btn-cobrar');
+    btn.disabled = true;
+
+    const total = Number(document.getElementById('total').innerText);
+    const metodo = document.getElementById('metodo-pago').value;
+    const recibido = Number(document.getElementById('monto-recibido').value) || total;
+    const cambio = metodo === 'Efectivo' ? Math.max(0, recibido - total) : 0;
+
+    const ventaActual = [...carrito];
+    const folio = 'V-' + new Date().getTime().toString().slice(-6);
+    const resumen = ventaActual.map(i => `${i.cantidad}x ${i.nombre}`).join(' | ');
+
+    ventaActual.forEach(item => {
+      const prod = inventario.find(p => p.codigo === item.codigo);
+      if (prod) {
+        prod.stock = Math.max(0, Number(prod.stock || 0) - Number(item.cantidad));
+      }
+    });
+    localStorage.setItem(KEY_PROD, JSON.stringify(inventario));
+
+    ventas.push({
+      fecha: new Date().toISOString(),
+      folio: folio,
+      metodo: metodo,
+      productos: resumen,
+      total: total.toFixed(2)
+    });
+    localStorage.setItem(KEY_VENTAS, JSON.stringify(ventas));
+
+    imprimirTicket(folio, total, ventaActual, metodo, recibido, cambio);
+
+    carrito = [];
+    document.getElementById('monto-recibido').value = '';
+    renderizarCarrito();
+    actualizarEstado();
+    renderizarListaInventario();
+    renderizarCorte();
+    btn.disabled = false;
+    document.getElementById('lector').focus();
+  }
+
+  function imprimirTicket(folio, total, items, metodo, recibido, cambio) {
+    document.getElementById('ticket-folio').innerText = 'Folio: ' + folio + ' | ' + new Date().toLocaleString();
+    document.getElementById('ticket-pago').innerText =
+      metodo === 'Efectivo'
+        ? `Pago: Efectivo ($${recibido.toFixed(2)}) | Cambio: $${cambio.toFixed(2)}`
+        : `Pago: ${metodo}`;
+    document.getElementById('ticket-items').innerHTML = items.map(i =>
+      `<div>${i.cantidad}x ${i.nombre} - $${(i.precio * i.cantidad).toFixed(2)}</div>`
+    ).join('');
+    document.getElementById('ticket-total').innerText = 'TOTAL: $' + total.toFixed(2);
+    window.print();
+  }
+
+  function exportarVentasCSV() {
+    if (ventas.length === 0) {
+      alert('Aún no hay ventas registradas para exportar.');
+      return;
+    }
+    const filas = [['FECHA', 'FOLIO', 'METODO_PAGO', 'PRODUCTOS', 'TOTAL']];
+    ventas.forEach(v => {
+      filas.push([
+        v.fecha,
+        v.folio,
+        v.metodo || 'Efectivo',
+        `"${String(v.productos).replace(/"/g, '""')}"`,
+        v.total
+      ]);
+    });
+    descargarCSV(filas, 'ventas_by_ari.csv');
+  }
+
+  function exportarInventarioCSV() {
+    if (inventario.length === 0) {
+      alert('No hay productos para respaldar.');
+      return;
+    }
+    const filas = [['CODIGO', 'NOMBRE', 'PRECIO', 'STOCK']];
+    inventario.forEach(p => {
+      filas.push([
+        `"${String(p.codigo).replace(/"/g, '""')}"`,
+        `"${String(p.nombre).replace(/"/g, '""')}"`,
+        p.precio,
+        p.stock
+      ]);
+    });
+    descargarCSV(filas, 'inventario_by_ari.csv');
+  }
+
+  function importarInventarioCSV(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const lineas = String(e.target.result || '').split(/\r?\n/).filter(l => l.trim() !== '');
+      if (lineas.length < 2) {
+        alert('El archivo CSV está vacío o sin datos.');
+        return;
+      }
+      const nuevos = [];
+      for (let i = 1; i < lineas.length; i++) {
+        const cols = lineas[i].split(',').map(c => c.replace(/^"|"$/g, '').replace(/""/g, '"').trim());
+        if (cols.length >= 3 && cols[0] && cols[1]) {
+          nuevos.push({
+            codigo: cols[0],
+            nombre: cols[1],
+            precio: Number(cols[2]) || 0,
+            stock: Number(cols[3]) || 0
+          });
+        }
+      }
+      if (nuevos.length > 0) {
+        inventario = nuevos;
+        guardarInventarioLocal();
+        alert(`Inventario importado (${nuevos.length} productos).`);
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
+  function descargarCSV(filas, nombreArchivo) {
+    const csvContent = filas.map(r => r.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nombreArchivo;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+</body>
+</html>
